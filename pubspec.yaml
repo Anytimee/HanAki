@@ -1,0 +1,62 @@
+name: hanaki
+description: "HanAki - Streaming Anime (JP) & Drakor (KR). Responsive Android & iOS, 4 bahasa."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.4.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: ^2.6.1
+  go_router: ^14.8.1
+  dio: ^5.9.0
+  cached_network_image: ^3.4.1
+  video_player: ^2.10.0
+  chewie: ^1.12.1
+  carousel_slider: ^5.1.1
+  shimmer: ^3.0.0
+  google_fonts: ^6.3.2
+  intl_phone_field: ^3.2.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  webview_flutter: ^4.14.1
+  web: ^1.1.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_native_splash: ^2.4.4
+  flutter_launcher_icons: ^0.14.3
+
+flutter:
+  generate: true
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icons/
+
+flutter_native_splash:
+  color: "#14121F"
+  image: assets/images/splash_logo.png
+  color_dark: "#14121F"
+  image_dark: assets/images/splash_logo.png
+  android_12:
+    color: "#14121F"
+    image: assets/images/splash_logo.png
+    color_dark: "#14121F"
+    image_dark: assets/images/splash_logo.png
+  fullscreen: true
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/icons/app_icon.png"
+  min_sdk_android: 21

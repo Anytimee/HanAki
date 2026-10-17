@@ -1,0 +1,73 @@
+// HanAki API — Prisma schema (PostgreSQL).
+// RBAC: User.role = ADMIN | USER. Hanya ADMIN boleh CUD konten/episode/server.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum ContentType {
+  ANIME
+  DRAKOR
+  DONGHUA
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String // hash bcrypt, TIDAK PERNAH dikembalikan ke client
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+}
+
+model Content {
+  id        String      @id @default(cuid())
+  slug      String      @unique // cth: "solo-leveling"
+  title     String
+  synopsis  String      @db.Text
+  posterUrl String
+  type      ContentType
+  status    String      @default("ONGOING") // ONGOING | COMPLETED | UPCOMING
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  episodes  Episode[]
+}
+
+model Episode {
+  id         String         @id @default(cuid())
+  contentId  String
+  episodeNum Int
+  title      String         @default("")
+  createdAt  DateTime       @default(now())
+  content    Content        @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  servers    StreamServer[]
+
+  @@unique([contentId, episodeNum]) // satu nomor episode per konten
+  @@index([contentId])
+}
+
+// Embed-only: TIDAK ADA kolom file upload lokal (filePath, fileSize,
+// storageKey, dsb). StreamServer.url hanya menyimpan TEKS link embed
+// (Dailymotion, OK.ru, Mega, Bilibili, ...) — server tidak menyimpan
+// atau menayangkan file video sama sekali.
+model StreamServer {
+  id        String   @id @default(cuid())
+  episodeId String
+  provider  String // "Dailymotion" | "OK.ru" | "Mega" | "Bilibili" | ...
+  quality   String   @default("720p") // 360p | 480p | 720p | 1080p
+  url       String   @db.Text // link embed http(s) — BUKAN path lokal
+  isPremium Boolean  @default(false) // true = hanya VIP
+  createdAt DateTime @default(now())
+  episode   Episode  @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+
+  @@index([episodeId])
+}
