@@ -15,6 +15,9 @@ anti-slop/
 admin/
 server/
 test/
+AGENTS.md
+analysis_options
+l10n.yaml
 
 # IntelliJ related
 *.iml
